@@ -25,6 +25,8 @@ import Container from '../../Components/Container';
 import {IconPath} from '../../Theme/IconPath';
 import {COLORS} from '../../Theme/Colors';
 import {Fonts} from '../../Theme/Fonts';
+import Carousel from '../../Components/Carousel';
+import ProductCard from '../../Components/ProductCard';
 
 // create a component
 const Home = () => {
@@ -35,7 +37,6 @@ const Home = () => {
   useEffect(() => {
     dispatch(fetchProducts(100));
   }, []);
-  console.log('productData===>', productData);
   let AllProducts = [];
   if (productData.length > 0) {
     AllProducts = productData;
@@ -48,23 +49,13 @@ const Home = () => {
   });
   const renderProductsItem = ({item}) => {
     return (
-      <TouchableOpacity
+      <ProductCard
+        data={item}
         onPress={() => {
           setSelectedItem(item);
           setModalVisible(true);
-        }}>
-        <View style={styles.productView}>
-          <Image
-            source={{uri: item.thumbnail}}
-            style={StyleSheet.absoluteFillObject}
-          />
-        </View>
-        <Text style={styles.name}>{item.title}</Text>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={styles.description}>
-          {item.description}
-        </Text>
-        <Text style={styles.price}>$ {item.price}</Text>
-      </TouchableOpacity>
+        }}
+      />
     );
   };
   return (
@@ -91,8 +82,6 @@ const Home = () => {
               let convertedName = categoryName.replace(/(^\w|\s\w)/g, m =>
                 m.toUpperCase(),
               );
-              console.log('categoryName===>', categoryName);
-              console.log('convertedName===>', convertedName);
               return (
                 <View key={category}>
                   <View style={styles.headerRow}>
@@ -129,7 +118,7 @@ const Home = () => {
             <Image source={IconPath.close} style={styles.close} />
           </TouchableOpacity>
           <View style={styles.modalInnerView}>
-            <Text>{JSON.stringify(selectedItem)}</Text>
+            <Carousel data={selectedItem} />
           </View>
         </View>
       </Modal>
@@ -173,7 +162,7 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(10),
   },
   category: {
-    color: '#000000',
+    color: COLORS.black,
   },
   headerRow: {
     flexDirection: 'row',
@@ -198,33 +187,7 @@ const styles = StyleSheet.create({
   seperator: {
     width: horizontalScale(10),
   },
-  productView: {
-    width: horizontalScale(150),
-    height: verticalScale(150),
-    borderRadius: moderateScale(10),
-    overflow: 'hidden',
-  },
-  name: {
-    marginTop: verticalScale(5),
-    fontSize: moderateScale(16),
-    color: COLORS.black,
-    fontFamily: Fonts.semiBold,
-    letterSpacing: 0.3,
-  },
-  description: {
-    width: horizontalScale(150),
-    fontSize: moderateScale(10),
-    color: COLORS.black,
-    fontFamily: Fonts.regular,
-    letterSpacing: 0.3,
-    marginBottom: verticalScale(5),
-  },
-  price: {
-    fontSize: moderateScale(14),
-    color: COLORS.green,
-    fontFamily: Fonts.semiBold,
-    letterSpacing: 0.3,
-  },
+
   closeBtn: {
     width: moderateScale(30),
     height: moderateScale(30),
@@ -248,13 +211,12 @@ const styles = StyleSheet.create({
   },
   modalInnerView: {
     backgroundColor: '#fff',
-    padding: 15,
+    padding: moderateScale(20),
     borderTopLeftRadius: moderateScale(50),
     borderTopRightRadius: moderateScale(50),
     width: fullWidth,
-    height: fullHeight * 0.6,
+    height: fullHeight * 0.5,
     justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
