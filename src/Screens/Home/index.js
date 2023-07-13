@@ -27,9 +27,11 @@ import {COLORS} from '../../Theme/Colors';
 import {Fonts} from '../../Theme/Fonts';
 import Carousel from '../../Components/Carousel';
 import ProductCard from '../../Components/ProductCard';
+import {ScreenName} from '../../Constant/ScreenName';
 
 // create a component
-const Home = () => {
+const Home = props => {
+  console.log('Page props', props);
   const dispatch = useDispatch();
   const {isLoading, error, productData} = useSelector(state => state.products);
   const [ModalVisible, setModalVisible] = useState(false);
@@ -88,7 +90,16 @@ const Home = () => {
                     <Text style={{fontWeight: 'bold', fontSize: 18}}>
                       {convertedName}
                     </Text>
-                    <TouchableOpacity style={styles.innerRow}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        props?.navigation.navigate(ScreenName.allProduct, {
+                          data: AllProducts.filter(
+                            product => product?.category === category,
+                          ),
+                          category,
+                        });
+                      }}
+                      style={styles.innerRow}>
                       <Text style={styles.all}>See All</Text>
                       <Image source={IconPath.forward} style={styles.forward} />
                     </TouchableOpacity>
